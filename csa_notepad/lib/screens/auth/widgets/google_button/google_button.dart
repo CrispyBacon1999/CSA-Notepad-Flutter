@@ -1,4 +1,4 @@
-import 'package:csa_notepad/screens/home/index.dart';
+import 'package:csa_notepad/screens/home/home.dart';
 import 'package:csa_notepad/widgets/app_button/index.dart';
 import 'package:flutter/material.dart';
 

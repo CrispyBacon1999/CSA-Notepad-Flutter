@@ -5,16 +5,16 @@ import 'widgets/google_button/google_button.dart';
 class Auth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Auth'),
-          leading: new Container(),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Auth'),
+          leading: Container(),
         ),
-        body: new Container(
-          child: new Center(
-              child: new Column(
+        body: Container(
+          child: Center(
+              child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[new GoogleButton()])),
+                  children: <Widget>[GoogleButton()])),
         ));
   }
 }
