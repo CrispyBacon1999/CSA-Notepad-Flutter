@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -12,7 +14,10 @@ class _EventPickerState extends State<EventPicker> {
   int filteredWeek = -1;
 
   List<Event> getEvents() {
-    return <Event>[Event("Great Lakes Bay Bot Bash", "Offseason", 99)];
+    HttpClient().getUrl(url).then()
+    return <Event>[
+      Event("Great Lakes Bay Bot Bash", "Offseason", 99)
+      ];
   }
 
   Map<String, int> getEventWeeks() {
@@ -75,10 +80,4 @@ class _EventPickerState extends State<EventPicker> {
   }
 }
 
-class Event {
-  const Event(this.name, this.district, this.week);
 
-  final int week;
-  final String name;
-  final String district;
-}
