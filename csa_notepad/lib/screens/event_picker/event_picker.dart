@@ -1,56 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class EventPicker extends StatelessWidget {
+class EventPicker extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _EventPickerState();
+  }
+}
+
+class _EventPickerState extends State<EventPicker> {
+  int filteredWeek = -1;
+
+  List<Event> getEvents() {
+    return <Event>[Event("Great Lakes Bay Bot Bash", "Offseason", 99)];
+  }
+
+  Map<String, int> getEventWeeks() {
+    return <String, int>{
+      'Preseason': 0,
+      'Week 1': 1,
+      'Week 2': 2,
+      'Week 3': 3,
+      'Week 4': 4,
+      'Week 5': 5,
+      'Week 6': 6,
+      'Week 7': 7,
+      'Houston Champs': 8,
+      'Detroit Champs': 9,
+      'Offseason': 99
+    };
+  }
+
+  void filterEvents(BuildContext context) async {
+    int week = await showDialog<int>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+              title: Text("Filter by Week"),
+              children: getEventWeeks()
+                  .map((title, num) => MapEntry<String, SimpleDialogOption>(
+                      title,
+                      SimpleDialogOption(
+                          onPressed: () {
+                            Navigator.pop(context, num);
+                          },
+                          child: Text(title))))
+                  .values
+                  .toList());
+        });
+
+    setState(() {
+      filteredWeek = week;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Pick Event")),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () => filterEvents(context),
+            child: Icon(Icons.date_range)),
         body: Container(
             child: Center(
                 child: Column(
-          children: <Widget>[
-            ListView.builder(
-                itemBuilder: (BuildContext context, int index) => EventItem(
-                    Week("Week1",
-                        <Event>[Event("Bot Bash", "FIRST in Michigan")])))
-          ],
+          children: getEvents()
+              .where((x) => this.filteredWeek == -1 || x.week == filteredWeek)
+              .map((event) => ListTile(
+                    title: Text(event.name),
+                    subtitle: Text(event.district),
+                  ))
+              .toList(),
         ))));
   }
 }
 
 class Event {
-  const Event(this.name, this.district);
+  const Event(this.name, this.district, this.week);
 
+  final int week;
   final String name;
   final String district;
-}
-
-class Week {
-  const Week(this.title, this.events);
-
-  final String title;
-  final List<Event> events;
-}
-
-class EventItem extends StatelessWidget {
-  const EventItem(this.week);
-  final Week week;
-
-  Widget _buildTiles(Week week) {
-    if (week.events.isEmpty) return ListTile(title: Text(week.title));
-    return ExpansionTile(
-      key: PageStorageKey<Week>(week),
-      title: Text(week.title),
-      children: week.events
-          .map((Event event) =>
-              ListTile(title: Text(event.name), subtitle: Text(event.district)))
-          .toList(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildTiles(week);
-  }
 }
